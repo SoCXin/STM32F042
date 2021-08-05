@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -67,7 +68,6 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
-  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -87,32 +87,34 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+//   MX_TIM1_Init();
+//   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 __HAL_RCC_PWR_CLK_ENABLE();
 
-  /* Check if the system was resumed from Standby mode */ 
-  if (__HAL_PWR_GET_FLAG(PWR_FLAG_SB) != RESET)
-  {
-    /* Clear Standby flag */
-    __HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);
-
-    /* Check and Clear the Wakeup flag */
-    if (__HAL_PWR_GET_FLAG(PWR_FLAG_WUF2) != RESET)
+  /* Check if the system was resumed from Standby mode */
+    if (__HAL_PWR_GET_FLAG(PWR_FLAG_SB) != RESET)
     {
-      __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WUF2);
+        /* Clear Standby flag */
+        __HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);
+
+        /* Check and Clear the Wakeup flag */
+        if (__HAL_PWR_GET_FLAG(PWR_FLAG_WUF2) != RESET)
+        {
+        __HAL_PWR_CLEAR_FLAG(PWR_FLAG_WUF2);
+        }
+
+        /* Wait that user release the User push-button */
+
+
     }
 
-    /* Wait that user release the User push-button */
-   
-  
-  }
-
   /* Insert 5 seconds delay */
-	 HAL_Delay(2000);
+    HAL_Delay(2000);
 	for(int i=0;i<50;i++)
 	{
-		 HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
-     HAL_Delay(100);
+        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
+        HAL_Delay(100);
 	}
 
   /* The Following Wakeup sequence is highly recommended prior to Standby mode entry
@@ -150,11 +152,12 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
-  /** Configure the main internal regulator output voltage 
+  /** Configure the main internal regulator output voltage
   */
   HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB busses clocks
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -165,7 +168,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB busses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1;
@@ -177,6 +180,14 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+  /** Initializes the peripherals clocks
+  */
+//   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_TIM1;
+//   PeriphClkInit.Tim1ClockSelection = RCC_TIM1CLKSOURCE_PCLK1;
+//   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
+//   {
+//     Error_Handler();
+//   }
 }
 
 /* USER CODE BEGIN 4 */
@@ -204,7 +215,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
