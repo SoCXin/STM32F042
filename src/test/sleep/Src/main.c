@@ -20,7 +20,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "tim.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -87,8 +86,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-//   MX_TIM1_Init();
-//   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 __HAL_RCC_PWR_CLK_ENABLE();
 
@@ -110,7 +107,7 @@ __HAL_RCC_PWR_CLK_ENABLE();
     }
 
   /* Insert 5 seconds delay */
-    HAL_Delay(2000);
+//    HAL_Delay(2000);
 	for(int i=0;i<50;i++)
 	{
         HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_7);
@@ -152,7 +149,6 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Configure the main internal regulator output voltage
   */
@@ -180,14 +176,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the peripherals clocks
-  */
-//   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_TIM1;
-//   PeriphClkInit.Tim1ClockSelection = RCC_TIM1CLKSOURCE_PCLK1;
-//   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
-//   {
-//     Error_Handler();
-//   }
 }
 
 /* USER CODE BEGIN 4 */
